@@ -1,0 +1,574 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Shelters' Horizon — Prisma Schema
+// Database  : Supabase PostgreSQL
+// Auth      : Supabase Auth (auth.users table)
+// Storage   : Supabase Storage
+//
+// IMPORTANT: Profile.id = Supabase Auth user UUID
+//   When a user signs up, Supabase creates a row in auth.users.
+//   Our trigger/endpoint creates the matching Profile row using that same UUID.
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider      = "prisma-client-js"
+  // engineType=library avoids downloading native binaries (required for Android)
+  engineType    = "library"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── ENUMS ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  buyer
+  seller
+  landlord
+  agent
+  caretaker
+  admin
+  superadmin
+}
+
+enum KycStatus {
+  unverified
+  pending
+  verified
+  rejected
+}
+
+enum PropertyCategory {
+  land
+  house
+  apartment
+  commercial
+  warehouse
+  shortlet
+  new_development
+  estate
+  exhibition
+}
+
+enum ListingType {
+  sale
+  lease
+  rent
+  shortlet
+  joint_venture
+}
+
+enum ListingTier {
+  free
+  verified
+  premium
+  developer
+}
+
+enum PropertyStatus {
+  draft
+  pending_review
+  active
+  under_escrow
+  sold
+  rented
+  leased
+  off_market
+  rejected
+  suspended
+}
+
+enum PropertyCondition {
+  new_build
+  renovated
+  good
+  needs_work
+  off_plan
+}
+
+enum PriceType {
+  fixed
+  range
+  negotiable
+}
+
+enum RentFrequency {
+  per_year
+  per_month
+  per_night
+}
+
+enum EscrowStatus {
+  initiated
+  commitment_paid
+  verification_in_progress
+  verification_complete
+  final_payment_pending
+  completed
+  disputed
+  refunded
+  cancelled
+}
+
+enum MilestoneStatus {
+  pending
+  held
+  released
+  refunded
+}
+
+enum ConversationStatus {
+  active
+  offer_pending
+  offer_accepted
+  viewing_scheduled
+  closed
+}
+
+enum MessageStatus {
+  sent
+  delivered
+  read
+}
+
+enum ReviewType {
+  buyer_review
+  seller_review
+  agent_review
+}
+
+enum RiskType {
+  land_grabbers
+  government_acquisition
+  flood_prone
+  disputed_title
+  boundary_dispute
+  demolition_notice
+  noise_pollution
+  security_risk
+  other
+}
+
+enum AlertFrequency {
+  instant
+  daily
+  weekly
+}
+
+enum ServiceRequestStatus {
+  pending
+  in_progress
+  completed
+  cancelled
+}
+
+// ─── MODELS ──────────────────────────────────────────────────────────────────
+
+// Profile mirrors Supabase auth.users — same UUID as the primary key
+model Profile {
+  id          String    @id  // = supabase auth.users.id (UUID)
+  firstName   String
+  lastName    String
+  email       String    @unique
+  phone       String    @default("")
+  role        UserRole  @default(buyer)
+  kycStatus   KycStatus @default(unverified)
+  isActive    Boolean   @default(true)
+  isSuspended Boolean   @default(false)
+  avatarUrl   String?   // Supabase Storage public URL
+  bio         String?
+  state       String?
+  lga         String?
+  rating      Float     @default(0)
+  reviewCount Int       @default(0)
+  trustScore  Int       @default(0)
+
+  verifications     ProfileVerification?
+  listings          Listing[]
+  savedListings     SavedListing[]
+  buyerEscrows      Escrow[]         @relation("BuyerEscrows")
+  sellerEscrows     Escrow[]         @relation("SellerEscrows")
+  agentEscrows      Escrow[]         @relation("AgentEscrows")
+  resolvedEscrows   Escrow[]         @relation("ResolvedBy")
+  sentMessages      Message[]
+  conversations     ConversationParticipant[]
+  reviewsGiven      Review[]         @relation("ReviewsGiven")
+  reviewsReceived   Review[]         @relation("ReviewsReceived")
+  notifications     Notification[]
+  savedSearches     SavedSearch[]
+  areaReports       AreaReport[]     @relation("Reporter")
+  verifiedReports   AreaReport[]     @relation("Verifier")
+  reportUpvotes     AreaReportUpvote[]
+  serviceRequests   ServiceRequest[]
+  escrowTimeline    EscrowTimeline[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("profiles")
+}
+
+model ProfileVerification {
+  id                   String  @id @default(cuid())
+  profileId            String  @unique
+  profile              Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  emailVerified        Boolean @default(false)
+  phoneVerified        Boolean @default(false)
+  ninVerified          Boolean @default(false)
+  bankAccountVerified  Boolean @default(false)
+  landRegistryVerified Boolean @default(false)
+  firsTinVerified      Boolean @default(false)
+  courtRecordsVerified Boolean @default(false)
+
+  @@map("profile_verifications")
+}
+
+model Listing {
+  id          String           @id @default(cuid())
+  ownerId     String
+  owner       Profile          @relation(fields: [ownerId], references: [id])
+  title       String
+  slug        String           @unique
+  description String
+  category    PropertyCategory
+  listingType ListingType
+  status      PropertyStatus   @default(draft)
+  tier        ListingTier      @default(free)
+
+  address       String
+  neighbourhood String         @default("")
+  lga           String
+  state         String
+  country       String         @default("Nigeria")
+  latitude      Float?
+  longitude     Float?
+
+  priceType     PriceType      @default(fixed)
+  price         BigInt?        // stored in kobo (smallest Naira unit)
+  minPrice      BigInt?
+  maxPrice      BigInt?
+  rentFrequency RentFrequency?
+
+  bedrooms      Int?
+  bathrooms     Int?
+  toilets       Int?
+  floorArea     Float?
+  landSize      Float?
+  floors        Int?
+  yearBuilt     Int?
+  condition     PropertyCondition?
+  parkingType   String?
+  powerSupply   String?
+  waterSupply   String?
+
+  hasSecurity   Boolean @default(false)
+  hasCctv       Boolean @default(false)
+  hasPool       Boolean @default(false)
+  hasGym        Boolean @default(false)
+  hasElevator   Boolean @default(false)
+  hasBq         Boolean @default(false)
+  hasGarden     Boolean @default(false)
+  hasInternet   Boolean @default(false)
+
+  titleDocument String?
+  views         Int     @default(0)
+  saves         Int     @default(0)
+  publishedAt   DateTime?
+
+  images        ListingImage[]
+  documents     ListingDocument[]
+  savedBy       SavedListing[]
+  escrows       Escrow[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([listingType])
+  @@index([state, lga])
+  @@index([ownerId])
+  @@index([price])
+  @@map("listings")
+}
+
+model ListingImage {
+  id          String   @id @default(cuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url         String   // Supabase Storage public URL
+  storagePath String   // path inside the bucket e.g. listing-images/abc123/photo.jpg
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@map("listing_images")
+}
+
+model ListingDocument {
+  id          String   @id @default(cuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  docType     String
+  name        String   @default("")
+  url         String   // Supabase Storage signed URL (private bucket)
+  storagePath String   // path inside the bucket
+  fileSize    Int?
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@map("listing_documents")
+}
+
+model SavedListing {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([profileId, listingId])
+  @@map("saved_listings")
+}
+
+model Escrow {
+  id           String       @id @default(cuid())
+  reference    String       @unique
+  listingId    String
+  listing      Listing      @relation(fields: [listingId], references: [id])
+  buyerId      String
+  buyer        Profile      @relation("BuyerEscrows",  fields: [buyerId],  references: [id])
+  sellerId     String
+  seller       Profile      @relation("SellerEscrows", fields: [sellerId], references: [id])
+  agentId      String?
+  agent        Profile?     @relation("AgentEscrows",  fields: [agentId],  references: [id])
+  resolvedById String?
+  resolvedBy   Profile?     @relation("ResolvedBy",    fields: [resolvedById], references: [id])
+
+  amount           BigInt
+  status           EscrowStatus @default(initiated)
+  currentPhase     Int          @default(1)
+  paymentGateway   String?
+  paymentReference String?
+  disputeReason    String?
+  resolvedAt       DateTime?
+  completedAt      DateTime?
+
+  milestones       EscrowMilestone[]
+  documents        EscrowDocument[]
+  timeline         EscrowTimeline[]
+  serviceProviders EscrowServiceProvider[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+  @@map("escrows")
+}
+
+model EscrowMilestone {
+  id          String          @id @default(cuid())
+  escrowId    String
+  escrow      Escrow          @relation(fields: [escrowId], references: [id], onDelete: Cascade)
+  phase       Int
+  label       String
+  description String
+  amount      BigInt
+  status      MilestoneStatus @default(pending)
+  paidAt      DateTime?
+  releasedAt  DateTime?
+
+  @@map("escrow_milestones")
+}
+
+model EscrowDocument {
+  id          String   @id @default(cuid())
+  escrowId    String
+  escrow      Escrow   @relation(fields: [escrowId], references: [id], onDelete: Cascade)
+  docType     String
+  url         String
+  storagePath String
+  fileSize    Int?
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@map("escrow_documents")
+}
+
+model EscrowTimeline {
+  id        String   @id @default(cuid())
+  escrowId  String
+  escrow    Escrow   @relation(fields: [escrowId], references: [id], onDelete: Cascade)
+  action    String
+  actorId   String
+  actor     Profile  @relation(fields: [actorId], references: [id])
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@map("escrow_timeline")
+}
+
+model EscrowServiceProvider {
+  id           String   @id @default(cuid())
+  escrowId     String
+  escrow       Escrow   @relation(fields: [escrowId], references: [id], onDelete: Cascade)
+  providerId   String
+  providerType String
+  providerName String
+  status       String   @default("pending")
+  requestedAt  DateTime @default(now())
+
+  @@map("escrow_service_providers")
+}
+
+model Conversation {
+  id            String             @id @default(cuid())
+  listingId     String?
+  escrowId      String?
+  status        ConversationStatus @default(active)
+  lastMessage   String?
+  lastMessageAt DateTime?
+  participants  ConversationParticipant[]
+  messages      Message[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  profileId      String
+  profile        Profile      @relation(fields: [profileId], references: [id])
+  unreadCount    Int          @default(0)
+
+  @@unique([conversationId, profileId])
+  @@index([profileId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String        @id @default(cuid())
+  conversationId String
+  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         Profile       @relation(fields: [senderId], references: [id])
+  content        String
+  isOffer        Boolean       @default(false)
+  offerAmount    BigInt?
+  status         MessageStatus @default(sent)
+  createdAt      DateTime      @default(now())
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+model Review {
+  id         String     @id @default(cuid())
+  reviewerId String
+  reviewer   Profile    @relation("ReviewsGiven",    fields: [reviewerId], references: [id])
+  subjectId  String
+  subject    Profile    @relation("ReviewsReceived", fields: [subjectId],  references: [id])
+  listingId  String?
+  rating     Int
+  text       String
+  type       ReviewType
+  createdAt  DateTime   @default(now())
+
+  @@index([subjectId])
+  @@map("reviews")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([profileId, isRead])
+  @@map("notifications")
+}
+
+model SavedSearch {
+  id          String         @id @default(cuid())
+  profileId   String
+  profile     Profile        @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  name        String
+  filters     Json
+  frequency   AlertFrequency @default(daily)
+  channels    String[]
+  isActive    Boolean        @default(true)
+  newMatches  Int            @default(0)
+  lastAlertAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([profileId])
+  @@map("saved_searches")
+}
+
+model AreaReport {
+  id            String     @id @default(cuid())
+  reporterId    String?
+  reporter      Profile?   @relation("Reporter", fields: [reporterId], references: [id])
+  riskType      RiskType
+  title         String
+  description   String
+  state         String
+  lga           String
+  neighbourhood String?
+  upvotes       Int        @default(0)
+  isVerified    Boolean    @default(false)
+  verifiedById  String?
+  verifiedBy    Profile?   @relation("Verifier", fields: [verifiedById], references: [id])
+  isAnonymous   Boolean    @default(false)
+  upvotedBy     AreaReportUpvote[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([state, lga])
+  @@map("area_reports")
+}
+
+model AreaReportUpvote {
+  id        String     @id @default(cuid())
+  reportId  String
+  report    AreaReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   Profile    @relation(fields: [profileId], references: [id])
+
+  @@unique([reportId, profileId])
+  @@map("area_report_upvotes")
+}
+
+model ServiceRequest {
+  id           String               @id @default(cuid())
+  profileId    String
+  profile      Profile              @relation(fields: [profileId], references: [id])
+  providerId   String
+  providerType String
+  description  String
+  location     String
+  budget       BigInt?
+  status       ServiceRequestStatus @default(pending)
+  reportUrl    String?
+  deliveredAt  DateTime?
+  escrowTxId   String?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([profileId])
+  @@map("service_requests")
+}

@@ -1,0 +1,11 @@
+import { Router } from "express";
+import multer from "multer";
+import { uploadImages, uploadDocument, deleteImage, getPresignedUrl } from "../controllers/uploads.controller";
+import { authenticate } from "../middleware/auth";
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+const router = Router();
+router.post("/images/:listingId",    authenticate, upload.array("images", 10), uploadImages);
+router.post("/documents/:listingId", authenticate, upload.single("document"),  uploadDocument);
+router.delete("/images/:imageId",    authenticate, deleteImage);
+router.get("/presigned/:docId",      authenticate, getPresignedUrl);
+export default router;

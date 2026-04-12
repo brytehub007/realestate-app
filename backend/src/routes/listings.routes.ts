@@ -1,0 +1,14 @@
+import { Router } from "express";
+import { getListings, getListing, getUserListings, getSavedListings, createListing, updateListing, publishListing, toggleSave, deleteListing } from "../controllers/listings.controller";
+import { authenticate, optionalAuth } from "../middleware/auth";
+const router = Router();
+router.get("/saved",         authenticate, getSavedListings);
+router.get("/user/:userId",  getUserListings);
+router.get("/",              optionalAuth,  getListings);
+router.get("/:slug",         optionalAuth,  getListing);
+router.post("/",             authenticate, createListing);
+router.patch("/:id",         authenticate, updateListing);
+router.post("/:id/publish",  authenticate, publishListing);
+router.post("/:id/save",     authenticate, toggleSave);
+router.delete("/:id",        authenticate, deleteListing);
+export default router;

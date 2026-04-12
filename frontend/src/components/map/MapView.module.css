@@ -1,0 +1,155 @@
+.wrap {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.mapBg {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  background: linear-gradient(135deg, #1a3a1a 0%, #0f2210 40%, #162e16 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+}
+
+/* Subtle grid pattern */
+.mapBg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(212,175,55,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,175,55,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  border-radius: inherit;
+}
+
+.mapLabel {
+  text-align: center;
+  color: rgba(212,175,55,.5);
+  z-index: 1;
+  pointer-events: none;
+}
+.mapLabel span { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+.mapLabel p { font-family: var(--font-sans); font-size: 0.85rem; margin: 0; }
+.mapSub { color: rgba(255,255,255,.3); font-size: 0.75rem !important; margin-top: 4px !important; }
+.mapNote {
+  color: rgba(255,255,255,.2) !important;
+  font-size: 0.68rem !important;
+  margin-top: 12px !important;
+  max-width: 260px;
+  line-height: 1.5;
+}
+.mapNote code {
+  background: rgba(255,255,255,.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* State cluster */
+.stateCluster {
+  position: absolute;
+  z-index: 2;
+}
+
+.clusterBubble {
+  width: 36px;
+  height: 36px;
+  background: var(--accent-gold);
+  color: var(--clr-green-950);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(212,175,55,.4);
+  cursor: pointer;
+}
+
+.clusterLabel {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,.6);
+  text-align: center;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+/* Individual pin */
+.pin {
+  position: absolute;
+  background: var(--clr-green-800);
+  border: 1px solid rgba(212,175,55,.4);
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  z-index: 3;
+}
+.pin:hover, .pinHovered {
+  background: var(--clr-green-700);
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+  z-index: 10;
+}
+.pinSelected {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+.pinSelected .pinPrice { color: var(--clr-green-950); }
+
+.pinPrice {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+/* Tooltip */
+.pinTooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--clr-green-900);
+  border: 1px solid rgba(212,175,55,.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+.pinTooltip strong {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: #fff;
+  display: block;
+}
+.pinTooltip span {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: rgba(255,255,255,.5);
+}
+.pinTooltipPrice {
+  color: var(--accent-gold) !important;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.empty {
+  color: rgba(255,255,255,.3);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+}

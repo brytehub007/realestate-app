@@ -1,0 +1,14 @@
+import { Router } from "express";
+import { getDashboard, getAdminEscrows, approveListing, rejectListing, suspendUser, verifyDocument, resolveReport, resolveDispute } from "../controllers/admin.controller";
+import { authenticate, requireRole } from "../middleware/auth";
+const isAdmin = [authenticate, requireRole("admin","superadmin")] as any[];
+const router = Router();
+router.get("/dashboard",                    ...isAdmin, getDashboard);
+router.get("/escrows",                      ...isAdmin, getAdminEscrows);
+router.patch("/listings/:id/approve",       ...isAdmin, approveListing);
+router.patch("/listings/:id/reject",        ...isAdmin, rejectListing);
+router.patch("/users/:id/suspend",          ...isAdmin, suspendUser);
+router.patch("/documents/:id/verify",       ...isAdmin, verifyDocument);
+router.patch("/reports/:id/resolve",        ...isAdmin, resolveReport);
+router.patch("/escrows/:id/resolve-dispute",...isAdmin, resolveDispute);
+export default router;

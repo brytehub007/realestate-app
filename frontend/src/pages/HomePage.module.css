@@ -1,0 +1,213 @@
+/* ── Typography ── */
+.h2Dark {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.8vw, 2.5rem);
+  font-weight: 700; color: var(--clr-green-900);
+  margin-bottom: 40px;
+}
+.h2Light {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.8vw, 2.5rem);
+  font-weight: 700; color: var(--clr-white);
+  margin-bottom: 28px;
+}
+
+/* ── Browse by Category ── */
+.catSection { background: #fff; }
+.catSectionHead {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px; margin-bottom: 40px;
+}
+.catSectionHead .h2Dark { margin-bottom: 0; }
+.viewAllBtn { font-size: 0.72rem !important; }
+.catGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.catCard {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 16px; border-radius: 14px;
+  background: var(--bg-light);
+  border: 1px solid #e5ede5;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.catCard:hover {
+  border-color: rgba(61,122,61,0.4);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.07);
+  transform: translateY(-2px);
+}
+.catCardIcon {
+  width: 48px; height: 48px; border-radius: 12px;
+  border: 1px solid; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.catCardEmoji { font-size: 1.4rem; }
+.catCardInfo { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.catCardTitle {
+  font-family: var(--font-display); font-size: 0.97rem;
+  font-weight: 600; color: var(--clr-green-900);
+}
+.catCardDesc { font-size: 0.76rem; color: var(--clr-silver-700); }
+.catArrow { color: var(--clr-green-500); flex-shrink: 0; }
+
+/* ── Featured Listings ── */
+.listingsSection { background: var(--bg-light); }
+.listingsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px; margin-bottom: 40px;
+}
+.listingsCta { display: flex; justify-content: center; }
+
+/* ── How It Works ── */
+.howGrid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.howCard {
+  padding: 32px 26px; border-right: 1px solid rgba(255,255,255,0.04);
+  display: flex; flex-direction: column; gap: 12px;
+  transition: background 0.2s;
+}
+.howCard:last-child { border-right: none; }
+.howCard:hover { background: rgba(255,255,255,0.025); }
+.howNum { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; line-height: 1; }
+.howRule { width: 28px; height: 2px; border-radius: 1px; }
+.howTitle { font-family: var(--font-display); font-size: 1.05rem; color: var(--clr-white); }
+.howBody { font-size: 0.85rem; line-height: 1.7; color: var(--clr-silver-500); }
+
+/* ── Tier section ── */
+.tierSection { background: #fff; }
+.tierGrid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; margin-bottom: 22px; align-items: start;
+}
+.tierCard {
+  background: var(--bg-light); border: 1px solid #e5ede5;
+  border-radius: 18px; padding: 24px 20px;
+  display: flex; flex-direction: column; gap: 14px;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.tierCard:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.09); }
+.tierHL {
+  border-color: rgba(212,175,55,0.5) !important;
+  background: rgba(212,175,55,0.03) !important;
+}
+.tierPopular {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: var(--accent-gold); color: var(--clr-green-950);
+  font-family: var(--font-sans); font-size: 0.58rem; font-weight: 800;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 3px 12px; border-radius: 999px; white-space: nowrap;
+}
+.tierDevTag {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: var(--clr-green-700); color: var(--clr-white);
+  font-family: var(--font-sans); font-size: 0.58rem; font-weight: 800;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 3px 12px; border-radius: 999px; white-space: nowrap;
+}
+.tierPrice {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 700;
+  color: var(--clr-green-800);
+}
+.tierList { list-style: none; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+.tierList li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.83rem; color: var(--clr-silver-900); line-height: 1.4; }
+.tick { color: var(--accent-gold); font-weight: 700; flex-shrink: 0; }
+.tierCta { width: 100%; justify-content: center; margin-top: 6px; }
+.pricePolicy {
+  text-align: center; font-size: 0.82rem; color: var(--clr-silver-700);
+  padding: 14px 20px;
+  background: rgba(231,76,60,0.05); border: 1px solid rgba(231,76,60,0.18);
+  border-radius: 10px;
+}
+
+/* ── Escrow section ── */
+.escrowLayout {
+  display: grid; grid-template-columns: 1fr 320px;
+  gap: 72px; align-items: start;
+}
+.escrowSteps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+.escrowStep {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  transition: border-color 0.2s;
+}
+.escrowActive {
+  border-color: rgba(212,175,55,0.4) !important;
+  background: rgba(212,175,55,0.05) !important;
+}
+.escrowStepIcon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+.escrowPhaseLabel {
+  font-family: var(--font-sans); font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--clr-gold-300);
+  display: block; margin-bottom: 3px;
+}
+.escrowStepTitle { font-family: var(--font-display); font-size: 1rem; color: var(--clr-white); display: block; }
+.escrowStepDesc { font-size: 0.82rem; color: var(--clr-silver-500); line-height: 1.6; margin-top: 4px; }
+.escrowRight {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.gatewayBox {
+  background: var(--clr-green-800); border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 14px; padding: 22px 20px; margin-bottom: 4px;
+}
+.gatewayLabel {
+  font-family: var(--font-sans); font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--clr-silver-500); margin-bottom: 14px;
+}
+.gatewayLogos { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.gatewayLogo {
+  padding: 8px 16px; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+}
+.gatewayNote { font-size: 0.75rem; color: var(--clr-silver-700); line-height: 1.5; }
+.escrowMetric {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-radius: 10px;
+  background: var(--clr-green-900); border: 1px solid var(--border);
+}
+.escrowMetricV { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--accent-gold); }
+.escrowMetricL { font-family: var(--font-sans); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--clr-silver-500); }
+
+/* ── Area Report banner ── */
+.areaSection { background: var(--bg-light); }
+.areaBanner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 40px; flex-wrap: wrap;
+  background: #fff; border: 1px solid #e5ede5;
+  border-left: 4px solid #e74c3c;
+  padding: 40px; border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1200px) {
+  .catGrid { grid-template-columns: repeat(3, 1fr); }
+  .tierGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 1024px) {
+  .listingsGrid { grid-template-columns: repeat(2, 1fr); }
+  .howGrid { grid-template-columns: repeat(2, 1fr); }
+  .escrowLayout { grid-template-columns: 1fr; gap: 40px; }
+  .escrowRight { flex-direction: row; flex-wrap: wrap; }
+  .gatewayBox { flex: 100%; }
+  .escrowMetric { flex: calc(50% - 6px); }
+}
+@media (max-width: 768px) {
+  .catGrid { grid-template-columns: repeat(2, 1fr); }
+  .listingsGrid { grid-template-columns: 1fr; }
+  .tierGrid { grid-template-columns: 1fr; }
+  .escrowMetric { flex: 100%; }
+}
+@media (max-width: 480px) {
+  .catGrid { grid-template-columns: 1fr; }
+  .howGrid { grid-template-columns: 1fr; }
+  .howCard { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
+}

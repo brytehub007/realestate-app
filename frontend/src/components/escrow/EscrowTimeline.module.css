@@ -1,0 +1,273 @@
+.wrapper {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  color: var(--text-primary);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 36px;
+  gap: 16px;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--clr-white);
+  margin-top: 8px;
+}
+
+.totalBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  flex-shrink: 0;
+}
+
+.totalLabel {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-gold-300);
+}
+
+.totalVal {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+/* Progress bar */
+.progressBar {
+  position: relative;
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  margin: 0 20px 48px;
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  right: auto;
+  background: linear-gradient(90deg, var(--clr-gold-700), var(--accent-gold));
+  border-radius: 2px;
+  transition: width 0.8s var(--ease-smooth);
+}
+
+.progressDot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.15);
+  transition: background var(--dur-base), border-color var(--dur-base);
+}
+
+.dotActive {
+  background: var(--accent-gold);
+  border-color: var(--clr-gold-300);
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+}
+
+.dotDone {
+  background: var(--clr-green-500);
+  border-color: var(--clr-green-300);
+  box-shadow: 0 0 0 4px rgba(90, 158, 90, 0.2);
+}
+
+/* Phase cards */
+.phases {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.phase {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-silver);
+  background: rgba(255,255,255,0.02);
+  transition: border-color var(--dur-base), background var(--dur-base);
+}
+
+.phaseCurrent {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.phaseDone {
+  border-color: rgba(90, 158, 90, 0.3);
+  background: rgba(90, 158, 90, 0.04);
+  opacity: 0.8;
+}
+
+.phaseLocked {
+  opacity: 0.45;
+}
+
+/* Icon */
+.phaseIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  transition: border-color var(--dur-base);
+}
+
+/* Content */
+.phaseContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phaseTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.phaseNum {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--clr-silver-500);
+}
+
+.phaseTitle {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--clr-white);
+  margin: 2px 0;
+}
+
+.phaseSub {
+  font-size: 0.78rem;
+  color: var(--accent-gold);
+}
+
+.phaseDesc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--clr-silver-500);
+}
+
+.amountRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.amountLabel {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--clr-silver-500);
+}
+
+.amountVal {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: var(--clr-silver-700);
+}
+
+.payBtn {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.txRef {
+  font-size: 0.72rem;
+  color: var(--clr-silver-700);
+}
+
+.txRef code {
+  background: rgba(255,255,255,0.06);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+}
+
+/* Status badges */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.statusPending  { background: rgba(168,168,168,0.12); border: 1px solid rgba(168,168,168,0.3); color: #a8a8a8; }
+.statusHeld     { background: rgba(212,175,55,0.12);  border: 1px solid rgba(212,175,55,0.35); color: #d4af37; }
+.statusReleased { background: rgba(90,158,90,0.12);   border: 1px solid rgba(90,158,90,0.35);  color: #7ec27e; }
+.statusRefunded { background: rgba(231,76,60,0.12);   border: 1px solid rgba(231,76,60,0.35);  color: #e74c3c; }
+
+/* Footer */
+.statusFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-silver);
+}
+
+.gatewayInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gatewayLabel {
+  font-size: 0.75rem;
+  color: var(--clr-silver-500);
+}
+
+.gatewayName {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--accent-gold);
+}

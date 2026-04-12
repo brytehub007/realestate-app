@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { getConversations, startConversation, getMessages, sendMessage, updateConversationStatus } from "../controllers/messages.controller";
+import { authenticate } from "../middleware/auth";
+const router = Router();
+router.get("/",              authenticate, getConversations);
+router.post("/",             authenticate, startConversation);
+router.get("/:id/messages",  authenticate, getMessages);
+router.post("/:id/messages", authenticate, sendMessage);
+router.patch("/:id/status",  authenticate, updateConversationStatus);
+export default router;

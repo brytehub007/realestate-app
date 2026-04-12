@@ -1,0 +1,38 @@
+{
+  "name": "shelters-horizon",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Shelters' Horizon — Nigeria's Most Transparent Real Estate Marketplace",
+  "type": "module",
+  "scripts": {
+    "dev":     "vite",
+    "build":   "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react":                        "^18.3.1",
+    "react-dom":                    "^18.3.1",
+    "react-router-dom":             "^6.24.0",
+    "@tanstack/react-query":        "^5.45.0",
+    "react-hot-toast":              "^2.4.1",
+    "react-hook-form":              "^7.52.0",
+    "zod":                          "^3.23.8",
+    "@hookform/resolvers":          "^3.6.0",
+    "zustand":                      "^4.5.3",
+    "axios":                        "^1.7.2",
+    "socket.io-client":             "^4.7.5",
+    "date-fns":                     "^3.6.0",
+    "recharts":                     "^2.12.7",
+    "react-dropzone":               "^14.2.3",
+    "framer-motion":                "^11.2.12",
+    "react-intersection-observer":  "^9.13.0",
+    "react-helmet-async":           "^2.0.5"
+  },
+  "devDependencies": {
+    "@types/react":                 "^18.3.3",
+    "@types/react-dom":             "^18.3.0",
+    "@vitejs/plugin-react":         "^4.3.1",
+    "typescript":                   "^5.2.2",
+    "vite":                         "^5.3.1"
+  }
+}

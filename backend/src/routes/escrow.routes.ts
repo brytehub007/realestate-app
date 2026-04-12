@@ -1,0 +1,12 @@
+import { Router } from "express";
+import { getMyEscrows, getEscrow, initiateEscrow, fundEscrow, confirmAgreement, completeEscrow, disputeEscrow } from "../controllers/escrow.controller";
+import { authenticate } from "../middleware/auth";
+const router = Router();
+router.get("/me",              authenticate, getMyEscrows);
+router.get("/:id",             authenticate, getEscrow);
+router.post("/",               authenticate, initiateEscrow);
+router.patch("/:id/fund",      authenticate, fundEscrow);
+router.patch("/:id/agree",     authenticate, confirmAgreement);
+router.patch("/:id/complete",  authenticate, completeEscrow);
+router.patch("/:id/dispute",   authenticate, disputeEscrow);
+export default router;
